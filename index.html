@@ -1,0 +1,3490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work Proof Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1220;
+    --surface:#121B2E;
+    --surface-2:#0E1626;
+    --line:#22304A;
+    --text:#E8ECF1;
+    --muted:#8592A6;
+    --amber:#F2A93B;
+    --cyan:#4FB0C6;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at top, rgba(79,176,198,0.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--cyan);}
+
+  /* ===== HEADER ===== */
+  header{
+    padding:64px 20px 40px;
+    max-width:880px;
+    margin:0 auto;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--amber);
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px;height:7px;border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 0 3px rgba(242,169,59,0.18);
+  }
+  h1{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:800;
+    font-size:clamp(32px, 6vw, 54px);
+    line-height:1.05;
+    margin:0 0 14px;
+    letter-spacing:-0.02em;
+  }
+  h1 span{color:var(--muted);}
+  header p{
+    color:var(--muted);
+    font-size:16px;
+    max-width:520px;
+    line-height:1.6;
+    margin:0 0 22px;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+  }
+  .meta-row a, .meta-row span{
+    border:1px solid var(--line);
+    padding:6px 12px;
+    border-radius:20px;
+    color:var(--text);
+    text-decoration:none;
+    background:var(--surface);
+  }
+  .meta-row .stat-num{color:var(--amber); font-weight:700;}
+
+  /* ===== LOG STREAM ===== */
+  main{
+    max-width:880px;
+    margin:0 auto;
+    padding:48px 20px 100px;
+  }
+  .stream-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    margin:0 0 24px;
+    padding-left:2px;
+  }
+
+  .entry{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin-bottom:22px;
+    overflow:hidden;
+    animation:rise 0.5s ease both;
+  }
+  @keyframes rise{
+    from{opacity:0; transform:translateY(10px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .term-bar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 14px;
+    background:var(--surface-2);
+    border-bottom:1px solid var(--line);
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    color:var(--muted);
+  }
+  .dots{display:flex; gap:6px; flex-shrink:0;}
+  .dots span{width:9px; height:9px; border-radius:50%; display:block;}
+  .dots span:nth-child(1){background:#4a5872;}
+  .dots span:nth-child(2){background:#4a5872;}
+  .dots span:nth-child(3){background:#4a5872;}
+  .term-path{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .term-path b{color:var(--cyan); font-weight:500;}
+
+  .entry-body{padding:18px;}
+  .entry-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:6px;
+  }
+  .entry-title{
+    font-size:17px;
+    font-weight:600;
+    margin:0;
+  }
+  .badge{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:3px 9px;
+    border-radius:5px;
+    flex-shrink:0;
+    white-space:nowrap;
+  }
+  .badge.photo{color:var(--amber); background:rgba(242,169,59,0.12); border:1px solid rgba(242,169,59,0.3);}
+  .badge.video{color:var(--cyan); background:rgba(79,176,198,0.12); border:1px solid rgba(79,176,198,0.3);}
+
+  .entry-desc{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.55;
+    margin:0 0 14px;
+  }
+  .entry-date{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:var(--muted);
+    margin-bottom:14px;
+    display:block;
+  }
+
+  .media-frame{
+    border-radius:7px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#000;
+  }
+  .media-frame img{
+    width:100%; display:block; max-height:520px; object-fit:contain; background:#050810;
+  }
+  .media-frame video{
+    width:100%; display:block; max-height:520px; background:#000;
+  }
+  .media-frame iframe{
+    width:100%; aspect-ratio:16/9; display:block; border:0;
+  }
+
+  .empty{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--muted);
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    border:1px dashed var(--line);
+    border-radius:var(--radius);
+  }
+
+  footer{
+    max-width:880px;
+    margin:0 auto;
+    padding:0 20px 60px;
+    color:var(--muted);
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    text-align:center;
+  }
+
+  @media (max-width:600px){
+    header{padding:44px 16px 32px;}
+    main{padding:36px 16px 80px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Verified Log</div>
+  <h1>Work Proof</h1>
+  <p>A running record of things I've actually built and shipped. Every entry below is a screenshot or clip pulled straight from a live project, not a mockup.</p>
+  <div class="meta-row">
+    <span><span class="stat-num" id="entryCount">0</span> entries logged</span>
+    <a href="https://t.me/Wipeeye" target="_blank" rel="noopener">@Wipeeye</a>
+  </div>
+</header>
+
+<main>
+  <p class="stream-label">$ tail -f proof.log</p>
+  <div id="stream"></div>
+</main>
+
+<footer>
+  @Wipeeye © <span id="year"></span> — built from Termux, deployed on GitHub Pages.
+</footer>
+
+<script>
+/* ============================================================
+   1000 EMPTY SLOTS ARE READY BELOW.
+
+   Just find the slot number you want (path: "proof/0001.png"
+   etc. tells you which one you're on), then edit that block:
+
+   - type  : "image"  or  "video"
+   - url   : paste your photo link (jpg/png) or video link
+             (works with direct .mp4 links or YouTube links)
+   - title : change to your real project name
+   - desc  : one line describing what it proves
+   - date  : e.g. "July 2026"
+   - path  : optional label shown in the terminal bar
+
+   Slots you don't fill in yet are simply skipped — they will
+   only show up once you replace "your-link-here" with a real
+   link, so it's safe to leave the rest empty for later.
+   ============================================================ */
+
+const PROOFS = [
+  {
+    type: "image",           // or "video"
+    url: "https://i.ibb.co/NnxPN9Wr/IMG-20260705-064336-861.jpg",
+    title: "proof",
+    desc: "What it proves",
+    date: "July 2025",
+    path: "proof/0001.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0002",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0002.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0003",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0003.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0004",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0004.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0005",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0005.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0006",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0006.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0007",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0007.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0008",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0008.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0009",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0009.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0010",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0010.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0011",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0011.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0012",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0012.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0013",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0013.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0014",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0014.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0015",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0015.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0016",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0016.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0017",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0017.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0018",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0018.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0019",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0019.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0020",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0020.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0021",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0021.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0022",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0022.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0023",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0023.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0024",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0024.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0025",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0025.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0026",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0026.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0027",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0027.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0028",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0028.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0029",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0029.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0030",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0030.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0031",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0031.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0032",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0032.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0033",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0033.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0034",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0034.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0035",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0035.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0036",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0036.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0037",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0037.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0038",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0038.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0039",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0039.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0040",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0040.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0041",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0041.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0042",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0042.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0043",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0043.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0044",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0044.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0045",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0045.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0046",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0046.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0047",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0047.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0048",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0048.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0049",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0049.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0050",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0050.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0051",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0051.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0052",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0052.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0053",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0053.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0054",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0054.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0055",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0055.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0056",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0056.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0057",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0057.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0058",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0058.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0059",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0059.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0060",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0060.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0061",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0061.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0062",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0062.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0063",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0063.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0064",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0064.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0065",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0065.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0066",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0066.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0067",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0067.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0068",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0068.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0069",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0069.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0070",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0070.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0071",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0071.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0072",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0072.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0073",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0073.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0074",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0074.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0075",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0075.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0076",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0076.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0077",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0077.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0078",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0078.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0079",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0079.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0080",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0080.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0081",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0081.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0082",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0082.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0083",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0083.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0084",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0084.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0085",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0085.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0086",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0086.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0087",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0087.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0088",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0088.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0089",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0089.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0090",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0090.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0091",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0091.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0092",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0092.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0093",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0093.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0094",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0094.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0095",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0095.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0096",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0096.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0097",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0097.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0098",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0098.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0099",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0099.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0100",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0100.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0101",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0101.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0102",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0102.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0103",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0103.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0104",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0104.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0105",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0105.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0106",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0106.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0107",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0107.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0108",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0108.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0109",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0109.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0110",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0110.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0111",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0111.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0112",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0112.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0113",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0113.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0114",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0114.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0115",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0115.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0116",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0116.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0117",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0117.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0118",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0118.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0119",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0119.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0120",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0120.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0121",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0121.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0122",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0122.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0123",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0123.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0124",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0124.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0125",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0125.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0126",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0126.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0127",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0127.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0128",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0128.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0129",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0129.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0130",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0130.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0131",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0131.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0132",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0132.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0133",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0133.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0134",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0134.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0135",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0135.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0136",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0136.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0137",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0137.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0138",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0138.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0139",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0139.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0140",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0140.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0141",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0141.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0142",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0142.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0143",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0143.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0144",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0144.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0145",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0145.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0146",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0146.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0147",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0147.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0148",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0148.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0149",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0149.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0150",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0150.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0151",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0151.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0152",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0152.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0153",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0153.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0154",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0154.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0155",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0155.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0156",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0156.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0157",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0157.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0158",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0158.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0159",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0159.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0160",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0160.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0161",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0161.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0162",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0162.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0163",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0163.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0164",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0164.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0165",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0165.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0166",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0166.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0167",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0167.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0168",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0168.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0169",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0169.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0170",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0170.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0171",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0171.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0172",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0172.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0173",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0173.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0174",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0174.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0175",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0175.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0176",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0176.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0177",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0177.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0178",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0178.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0179",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0179.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0180",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0180.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0181",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0181.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0182",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0182.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0183",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0183.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0184",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0184.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0185",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0185.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0186",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0186.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0187",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0187.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0188",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0188.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0189",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0189.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0190",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0190.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0191",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0191.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0192",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0192.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0193",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0193.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0194",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0194.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0195",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0195.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0196",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0196.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0197",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0197.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0198",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0198.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0199",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0199.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0200",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0200.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0201",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0201.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0202",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0202.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0203",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0203.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0204",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0204.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0205",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0205.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0206",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0206.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0207",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0207.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0208",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0208.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0209",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0209.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0210",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0210.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0211",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0211.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0212",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0212.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0213",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0213.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0214",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0214.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0215",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0215.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0216",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0216.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0217",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0217.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0218",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0218.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0219",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0219.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0220",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0220.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0221",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0221.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0222",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0222.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0223",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0223.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0224",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0224.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0225",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0225.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0226",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0226.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0227",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0227.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0228",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0228.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0229",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0229.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0230",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0230.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0231",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0231.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0232",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0232.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0233",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0233.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0234",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0234.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0235",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0235.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0236",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0236.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0237",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0237.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0238",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0238.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0239",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0239.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0240",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0240.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0241",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0241.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0242",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0242.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0243",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0243.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0244",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0244.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0245",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0245.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0246",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0246.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0247",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0247.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0248",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0248.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0249",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0249.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0250",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0250.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0251",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0251.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0252",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0252.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0253",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0253.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0254",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0254.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0255",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0255.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0256",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0256.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0257",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0257.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0258",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0258.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0259",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0259.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0260",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0260.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0261",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0261.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0262",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0262.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0263",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0263.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0264",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0264.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0265",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0265.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0266",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0266.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0267",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0267.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0268",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0268.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0269",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0269.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0270",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0270.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0271",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0271.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0272",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0272.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0273",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0273.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0274",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0274.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0275",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0275.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0276",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0276.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0277",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0277.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0278",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0278.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0279",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0279.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0280",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0280.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0281",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0281.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0282",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0282.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0283",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0283.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0284",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0284.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0285",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0285.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0286",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0286.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0287",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0287.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0288",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0288.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0289",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0289.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0290",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0290.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0291",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0291.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0292",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0292.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0293",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0293.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0294",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0294.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0295",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0295.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0296",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0296.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0297",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0297.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0298",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0298.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0299",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0299.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0300",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0300.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0301",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0301.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0302",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0302.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0303",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0303.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0304",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0304.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0305",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0305.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0306",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0306.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0307",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0307.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0308",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0308.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0309",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0309.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0310",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0310.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0311",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0311.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0312",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0312.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0313",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0313.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0314",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0314.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0315",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0315.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0316",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0316.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0317",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0317.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0318",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0318.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0319",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0319.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0320",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0320.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0321",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0321.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0322",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0322.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0323",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0323.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0324",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0324.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0325",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0325.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0326",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0326.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0327",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0327.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0328",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0328.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0329",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0329.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0330",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0330.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0331",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0331.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0332",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0332.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0333",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0333.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0334",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0334.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0335",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0335.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0336",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0336.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0337",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0337.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0338",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0338.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0339",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0339.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0340",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0340.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0341",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0341.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0342",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0342.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0343",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0343.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0344",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0344.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0345",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0345.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0346",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0346.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0347",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0347.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0348",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0348.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0349",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0349.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0350",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0350.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0351",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0351.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0352",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0352.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0353",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0353.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0354",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0354.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0355",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0355.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0356",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0356.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0357",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0357.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0358",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0358.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0359",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0359.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0360",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0360.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0361",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0361.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0362",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0362.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0363",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0363.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0364",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0364.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0365",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0365.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0366",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0366.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0367",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0367.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0368",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0368.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0369",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0369.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0370",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0370.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0371",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0371.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0372",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0372.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0373",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0373.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0374",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0374.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0375",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0375.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0376",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0376.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0377",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0377.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0378",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0378.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0379",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0379.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0380",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0380.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0381",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0381.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0382",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0382.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0383",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0383.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0384",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0384.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0385",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0385.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0386",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0386.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0387",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0387.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0388",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0388.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0389",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0389.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0390",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0390.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0391",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0391.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0392",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0392.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0393",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0393.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0394",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0394.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0395",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0395.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0396",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0396.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0397",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0397.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0398",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0398.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0399",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0399.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0400",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0400.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0401",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0401.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0402",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0402.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+    title: "Project Name 0403",
+    desc: "What it proves",
+    date: "July 2026",
+    path: "proof/0403.png" // shows in the terminal header, optional
+  },
+  {
+    type: "image",           // or "video"
+    url: "your-link-here",
+  
